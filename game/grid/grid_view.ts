@@ -9,13 +9,13 @@ const VIEW_WIDTH = 800;
 const VIEW_HEIGHT = 600;
 const WALK_MS = 120;
 const BUMP_MS = 60;
-const MARKER_COLOR = 0xf5e6a8;
+const MARKER_COLOR = 0xc9857b;
 const BUMP_COLOR = 0xe0533d;
 
 const TERRAIN_COLORS: Record<Terrain, number> = {
-  grass: 0x5d9e4a,
+  shore: 0xe7ce91,
   forest: 0x2f6b3a,
-  water: 0x2d5f9e,
+  water: 0x56c1d6,
   rock: 0x6e6a66,
 };
 

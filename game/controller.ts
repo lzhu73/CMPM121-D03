@@ -7,6 +7,10 @@ const ARROWS: Record<string, Direction> = {
   ArrowDown: "south",
   ArrowLeft: "west",
   ArrowRight: "east",
+  w: "north",
+  s: "south",
+  a: "west",
+  d: "east",
 };
 
 // Input in, core in the middle, presenter out. None of those three knows the others,
