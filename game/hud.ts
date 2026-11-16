@@ -44,6 +44,10 @@ export class Hud {
   constructor(state: GameState) {
     this.seed = state.seed;
     this.showPosition(state.player.x, state.player.y);
+
+    // Show instructions when the game starts
+    element("live").textContent =
+      "Press G to gather materials from the ground!";
   }
 
   show(event: GameEvent) {
