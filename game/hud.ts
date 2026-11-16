@@ -9,7 +9,15 @@ function describe(event: GameEvent): string {
     case "moved":
       return `moved to ${event.to.x}, ${event.to.y}`;
     case "blocked":
-      return `blocked by ${event.terrain} at ${event.toward.x}, ${event.toward.y}`;
+      if (event.terrain === "forest") {
+        return "Need axe 🪓 to enter the forest!";
+      }
+
+      if (event.terrain === "water") {
+        return "Cannot enter water! Walk beside it to wet leaves.";
+      }
+
+      return `Blocked by ${event.terrain}`;
     case "gathered":
       return Object.keys(event.items).length === 0
         ? "Nothing found"
