@@ -2,6 +2,12 @@
 // so the world can be effectively unbounded while saved state stays small.
 
 export type Terrain = "shore" | "forest" | "water" | "rock";
+export const TERRAIN_RESOURCES: Record<Terrain, string[]> = {
+  shore: ["stick"],
+  rock: ["stone"],
+  forest: ["wood"],
+  water: [],
+};
 
 export function terrainAt(seed: number, x: number, y: number): Terrain {
   const raw = 0.65 * noise(seed, x, y, 9) + 0.35 * noise(seed + 1, x, y, 3);

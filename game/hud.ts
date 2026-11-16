@@ -10,6 +10,10 @@ function describe(event: GameEvent): string {
       return `moved to ${event.to.x}, ${event.to.y}`;
     case "blocked":
       return `blocked by ${event.terrain} at ${event.toward.x}, ${event.toward.y}`;
+    case "gathered":
+      return `gathered at ${event.at.x}, ${event.at.y}`;
+    case "gather_failed":
+      return event.reason;
   }
 }
 
@@ -25,7 +29,21 @@ export class Hud {
 
   show(event: GameEvent) {
     element("live").textContent = describe(event);
-    if (event.type === "moved") this.showPosition(event.to.x, event.to.y);
+
+    if (event.type === "moved") {
+      this.showPosition(event.to.x, event.to.y);
+    }
+
+    if (event.type === "gathered") {
+      const inventory = element("inventory");
+      inventory.replaceChildren();
+
+      for (const [item, count] of Object.entries(event.inventory)) {
+        const li = document.createElement("li");
+        li.textContent = `${item}: ${count}`;
+        inventory.appendChild(li);
+      }
+    }
   }
 
   private showPosition(x: number, y: number) {
