@@ -2,10 +2,24 @@
 // so the world can be effectively unbounded while saved state stays small.
 
 export type Terrain = "shore" | "forest" | "water" | "rock";
-export const TERRAIN_RESOURCES: Record<Terrain, string[]> = {
-  shore: ["stick"],
-  rock: ["stone"],
-  forest: ["wood"],
+export type ResourceDrop = {
+  item: string;
+  chance: number;
+};
+
+export const TERRAIN_RESOURCES: Record<Terrain, ResourceDrop[]> = {
+  shore: [
+    { item: "stick", chance: 0.8 },
+    { item: "wood", chance: 0.1 },
+  ],
+  rock: [
+    { item: "stone", chance: 0.7 },
+    { item: "flint", chance: 0.05 },
+  ],
+  forest: [
+    { item: "wood", chance: 0.6 },
+    { item: "leaf", chance: 0.15 },
+  ],
   water: [],
 };
 
@@ -19,8 +33,22 @@ export function terrainAt(seed: number, x: number, y: number): Terrain {
   return noise(seed + 2, x, y, 6) < 0.45 ? "rock" : "shore";
 }
 
-export function isPassable(terrain: Terrain): boolean {
-  return terrain !== "water" && terrain !== "forest";
+export const TERRAIN_ACCESS: Record<Terrain, boolean | string> = {
+  shore: true,
+  rock: true,
+  forest: "axe",
+  water: false,
+};
+
+export function isPassable(
+  terrain: Terrain,
+  inventory: Record<string, number> = {},
+): boolean {
+  const access = TERRAIN_ACCESS[terrain];
+
+  if (typeof access === "boolean") return access;
+
+  return (inventory[access] ?? 0) > 0;
 }
 
 // Value noise: random numbers at coarse grid points, blended between them, so
@@ -57,4 +85,8 @@ function gridValue(seed: number, x: number, y: number): number {
   hash = Math.imul(hash ^ (hash >>> 15), 0x2c1b3c6d);
   hash = Math.imul(hash ^ (hash >>> 12), 0x297a2d39);
   return ((hash ^ (hash >>> 15)) >>> 0) / 2 ** 32;
+}
+
+export function gatherRoll(seed: number, x: number, y: number): number {
+  return gridValue(seed + 3, x, y);
 }

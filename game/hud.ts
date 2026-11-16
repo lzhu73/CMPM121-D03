@@ -11,9 +11,17 @@ function describe(event: GameEvent): string {
     case "blocked":
       return `blocked by ${event.terrain} at ${event.toward.x}, ${event.toward.y}`;
     case "gathered":
-      return `gathered at ${event.at.x}, ${event.at.y}`;
+      return Object.keys(event.items).length === 0
+        ? "Nothing found"
+        : `gathered at ${event.at.x}, ${event.at.y}`;
     case "gather_failed":
       return event.reason;
+    case "crafted":
+      return `crafted ${event.recipe}`;
+    case "craft_failed":
+      return event.reason;
+    case "leaves_wetted":
+      return `Wetted ${event.count} leaves`;
   }
 }
 
@@ -38,7 +46,13 @@ export class Hud {
     if (event.type === "gathered") {
       this.gatheredCells.add(`${event.at.x},${event.at.y}`);
       this.showPosition(event.at.x, event.at.y);
+    }
 
+    if (
+      event.type === "gathered" ||
+      event.type === "crafted" ||
+      event.type === "leaves_wetted"
+    ) {
       const inventory = element("inventory");
       inventory.replaceChildren();
 

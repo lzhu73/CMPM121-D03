@@ -48,14 +48,40 @@ body {
   color: #b7b3a8;
 }
 
-#mute {
-  align-self: start;
-  padding: 4px 10px;
+#hud button {
+  padding: 8px 12px;
+  font: inherit;
   color: inherit;
   background: #262a31;
   border: 1px solid #3a3f48;
   border-radius: 4px;
   cursor: pointer;
+  text-align: left;
+}
+
+#hud button:hover {
+  background: #343a44;
+}
+
+#hud button:focus-visible {
+  outline: 2px solid #e7ce91;
+  outline-offset: 2px;
+}
+
+#recipes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+#recipes button {
+  width: auto;
+}
+
+#mute {
+  align-self: flex-start;
 }
 
 /* Slight tilt and vignette: pure presentation, Phaser untouched. */
