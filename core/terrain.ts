@@ -90,3 +90,8 @@ function gridValue(seed: number, x: number, y: number): number {
 export function gatherRoll(seed: number, x: number, y: number): number {
   return gridValue(seed + 3, x, y);
 }
+
+export const WETTING = {
+  input: "leaf",
+  output: "wet_leaf",
+};

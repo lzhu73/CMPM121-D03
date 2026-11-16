@@ -1,5 +1,5 @@
 import { assert, assertEquals } from "@std/assert";
-import { apply, newGame, RECIPES, TERRAIN_RESOURCES } from "./mod.ts";
+import { apply, newGame, RECIPES, TERRAIN_RESOURCES, WETTING } from "./mod.ts";
 
 Deno.test("every recipe input has a source", () => {
   const sources = new Set<string>();
@@ -15,6 +15,9 @@ Deno.test("every recipe input has a source", () => {
   }
 
   for (const [name, recipe] of Object.entries(RECIPES)) {
+    if (sources.has(WETTING.input)) {
+      sources.add(WETTING.output);
+    }
     for (const item of Object.keys(recipe.inputs)) {
       assert(
         sources.has(item),

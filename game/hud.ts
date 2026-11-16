@@ -22,6 +22,8 @@ function describe(event: GameEvent): string {
       return event.reason;
     case "leaves_wetted":
       return `Wetted ${event.count} leaves`;
+    case "won":
+      return "Your signal was spotted. You are rescued!";
   }
 }
 
@@ -38,6 +40,9 @@ export class Hud {
 
   show(event: GameEvent) {
     element("live").textContent = describe(event);
+    if (event.type === "won") {
+      element("ending").hidden = false;
+    }
 
     if (event.type === "moved") {
       this.showPosition(event.to.x, event.to.y);

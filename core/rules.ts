@@ -8,6 +8,7 @@ import {
   type Terrain,
   TERRAIN_RESOURCES,
   terrainAt,
+  WETTING,
 } from "./terrain.ts";
 import { type Recipe, RECIPES } from "./recipes.ts";
 
@@ -24,6 +25,7 @@ export type GameState = {
   changedCells: Record<string, boolean>;
   flintPity: number;
   leafPity: number;
+  won: boolean;
 };
 
 // Command: https://gameprogrammingpatterns.com/command.html
@@ -53,7 +55,8 @@ export type GameEvent =
     type: "leaves_wetted";
     count: number;
     inventory: Record<string, number>;
-  };
+  }
+  | { type: "won" };
 
 const STEPS: Record<Direction, Cell> = {
   north: { x: 0, y: -1 },
@@ -71,11 +74,13 @@ export function newGame(seed: number): GameState {
     changedCells: {},
     flintPity: 0,
     leafPity: 0,
+    won: false,
   };
 }
 
 // The single way in. It updates the state it is given and returns the events.
 export function apply(state: GameState, command: Command): GameEvent[] {
+  if (state.won) return [];
   switch (command.type) {
     case "move":
       return move(state, command.direction);
@@ -220,15 +225,22 @@ function craft(state: GameState, name: string): GameEvent[] {
 
   state.inventory[recipe.output] = (state.inventory[recipe.output] ?? 0) + 1;
 
-  return [{
+  const events: GameEvent[] = [{
     type: "crafted",
     recipe: name,
     inventory: { ...state.inventory },
   }];
+
+  if (recipe.wins) {
+    state.won = true;
+    events.push({ type: "won" });
+  }
+
+  return events;
 }
 
 function wetLeaves(state: GameState): GameEvent[] {
-  const count = state.inventory["leaf"] ?? 0;
+  const count = state.inventory[WETTING.input] ?? 0;
   if (count === 0) return [];
 
   const besideWater = Object.values(STEPS).some((step) =>
@@ -241,8 +253,9 @@ function wetLeaves(state: GameState): GameEvent[] {
 
   if (!besideWater) return [];
 
-  state.inventory["leaf"] = 0;
-  state.inventory["wet_leaf"] = (state.inventory["wet_leaf"] ?? 0) + count;
+  state.inventory[WETTING.input] = 0;
+  state.inventory[WETTING.output] = (state.inventory[WETTING.output] ?? 0) +
+    count;
 
   return [{
     type: "leaves_wetted",
