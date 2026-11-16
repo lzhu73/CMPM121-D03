@@ -21,6 +21,7 @@ function describe(event: GameEvent): string {
 // tools can read. It changes only as events play.
 export class Hud {
   private readonly seed: number;
+  private gatheredCells = new Set<string>();
 
   constructor(state: GameState) {
     this.seed = state.seed;
@@ -35,6 +36,9 @@ export class Hud {
     }
 
     if (event.type === "gathered") {
+      this.gatheredCells.add(`${event.at.x},${event.at.y}`);
+      this.showPosition(event.at.x, event.at.y);
+
       const inventory = element("inventory");
       inventory.replaceChildren();
 
@@ -48,6 +52,11 @@ export class Hud {
 
   private showPosition(x: number, y: number) {
     element("position").textContent = `${x}, ${y}`;
-    element("terrain").textContent = terrainAt(this.seed, x, y);
+    const terrain = terrainAt(this.seed, x, y);
+    const gathered = this.gatheredCells.has(`${x},${y}`);
+
+    element("terrain").textContent = gathered
+      ? `${terrain} (depleted)`
+      : terrain;
   }
 }

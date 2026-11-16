@@ -20,6 +20,7 @@ export type GameState = {
   player: Cell;
   inventory: Record<string, number>;
   changedCells: Record<string, boolean>;
+  flintPity: number;
 };
 
 // Command: https://gameprogrammingpatterns.com/command.html
@@ -53,6 +54,7 @@ export function newGame(seed: number): GameState {
     player: { x: 0, y: 0 },
     inventory: {},
     changedCells: {},
+    flintPity: 0,
   };
 }
 
@@ -106,6 +108,20 @@ function gather(state: GameState): GameEvent[] {
   }
 
   state.changedCells[key] = true;
+
+  if (terrain === "rock") {
+    if ((items["flint"] ?? 0) > 0) {
+      state.flintPity = 0;
+    } else {
+      state.flintPity += 1;
+
+      if (state.flintPity >= 50) {
+        state.inventory["flint"] = (state.inventory["flint"] ?? 0) + 1;
+        items["flint"] = 1;
+        state.flintPity = 0;
+      }
+    }
+  }
 
   return [{
     type: "gathered",

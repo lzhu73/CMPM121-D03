@@ -38,6 +38,7 @@ export class GridView extends Phaser.Scene {
   private readonly start: Cell;
   private ground!: Phaser.GameObjects.Graphics;
   private marker!: Phaser.GameObjects.Arc;
+  private gatheredCells = new Set<string>();
 
   constructor(state: GameState) {
     super("grid");
@@ -83,6 +84,9 @@ export class GridView extends Phaser.Scene {
       case "blocked":
         return this.bump(event.at, event.toward);
       case "gathered":
+        this.gatheredCells.add(`${event.at.x},${event.at.y}`);
+        this.drawCellsAround(event.at);
+        return this.gather();
       case "gather_failed":
         return Promise.resolve();
       default:
@@ -90,6 +94,19 @@ export class GridView extends Phaser.Scene {
         event satisfies never;
         return Promise.resolve();
     }
+  }
+
+  private gather(): Promise<void> {
+    return new Promise((done) => {
+      this.tweens.add({
+        targets: this.marker,
+        scaleX: 1.4,
+        scaleY: 1.4,
+        duration: 100,
+        yoyo: true,
+        onComplete: () => done(),
+      });
+    });
   }
 
   private walk(to: Cell): Promise<void> {
@@ -129,7 +146,12 @@ export class GridView extends Phaser.Scene {
     this.ground.clear();
     for (let y = centerY - CELLS_DOWN; y <= centerY + CELLS_DOWN; y++) {
       for (let x = centerX - CELLS_ACROSS; x <= centerX + CELLS_ACROSS; x++) {
-        this.ground.fillStyle(TERRAIN_COLORS[terrainAt(this.seed, x, y)]);
+        const gathered = this.gatheredCells.has(`${x},${y}`);
+        this.ground.fillStyle(
+          TERRAIN_COLORS[terrainAt(this.seed, x, y)],
+          gathered ? 0.75 : 1,
+        );
+
         this.ground.fillRect(
           x * CELL_SIZE,
           y * CELL_SIZE,
