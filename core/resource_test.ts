@@ -63,17 +63,17 @@ Deno.test("a natural flint drop resets the pity counter", () => {
 
 Deno.test("a rock gather without flint increases the pity counter", () => {
   const state = gameAt("rock", 0, 0.7);
-  state.flintPity = 48;
+  state.flintPity = 28;
 
   apply(state, { type: "gather" });
 
   assertEquals(state.inventory, { stone: 1 });
-  assertEquals(state.flintPity, 49);
+  assertEquals(state.flintPity, 29);
 });
 
 Deno.test("the 50th rock attempt guarantees flint even on an empty roll", () => {
   const state = gameAt("rock", 0.75, 1);
-  state.flintPity = 49;
+  state.flintPity = 29;
   const { x, y } = state.player;
 
   const events = apply(state, { type: "gather" });

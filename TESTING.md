@@ -14,7 +14,7 @@ For a person, or an agent driving a browser. Run `deno task dev` and open the lo
 | 6  | Hold an arrow down                                        | The marker keeps walking. Holding into a wall repeats the bump.                                                                                          |
 | 7  | Load `?seed=7`                                            | A different map.                                                                                                                                         |
 | 8  | Run `game.state` in the console                           | Plain data containing seed, player, inventory, changedCells, flintPity, leafPity, and won. No stored terrain map.                                        |
-| 9  | Press an arrow several times                              | Position and Terrain in the panel change as each step plays, and never ahead of the marker.                                                              |
+| 9  | Press an arrow several times                              | Position and Terrain update when each movement event starts. After movement stops, the marker and panel match game.state.player.                         |
 | 10 | Make the window short, then press the down arrow          | The page does not scroll. The marker moves.                                                                                                              |
 | 11 | Click the sound button, then press an arrow               | The button reads `Sound: off`, and the arrow still moves the marker.                                                                                     |
 | 12 | Click the sound button again                              | The button reads `Sound: on`, and you hear a two-note chime.                                                                                             |
@@ -24,23 +24,23 @@ For a person, or an agent driving a browser. Run `deno task dev` and open the lo
 
 ## Gathering and Crafting
 
-| #  | Action                                                     | Expected observation                                                                         |
-| -- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| 16 | Load the game                                              | Instructions tell the player to press G to gather materials.                                 |
-| 17 | Stand on shore terrain and press G                         | The player may collect a stick or wood. Inventory updates when a resource is found.          |
-| 18 | Press G twice on the same cell                             | The second attempt displays "Already gathered". Inventory does not change.                   |
-| 19 | Stand on rock terrain and press G                          | The player may collect stone or flint.                                                       |
-| 20 | Click Craft Axe without enough materials                   | A message displays the missing materials, such as "Missing stick: 2, stone: 1".              |
-| 21 | Check crafting buttons                                     | Each button displays the total required materials, such as "10 sticks                        |
-| 22 | Collect 10 sticks and 10 stones, then click Craft Axe      | An axe is crafted and the required ingredients are deducted.                                 |
-| 23 | Check Craft Axe after crafting it                          | The button displays "Owned", becomes disabled, and moves to the bottom of the crafting list. |
-| 24 | Walk into forest with an axe                               | The player enters the forest successfully.                                                   |
-| 25 | Stand in the forest and press G                            | The player may collect wood or leaves.                                                       |
-| 26 | Carry leaves and move onto a cell next to water            | The leaves automatically become wet leaves.                                                  |
-| 27 | Try walking into water                                     | The player is blocked and a message explains that water cannot be entered.                   |
-| 28 | Collect the required materials and craft a campfire        | Materials are deducted and a campfire is added to inventory.                                 |
-| 29 | Click Build Rescue Signal without enough materials         | The message displays which materials are missing.                                            |
-| 30 | Craft Build Rescue Signal with 1 campfire and 5 wet leaves | The game displays "Your signal was spotted. You are rescued!" and the player wins.           |
+| #  | Action                                                     | Expected observation                                                                                                   |
+| -- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 16 | Load the game                                              | Instructions tell the player to press G to gather materials.                                                           |
+| 17 | Stand on shore terrain and press G                         | The player may collect a stick or wood. Inventory updates when a resource is found.                                    |
+| 18 | Press G twice on the same cell                             | The second attempt displays "Already gathered". Inventory does not change.                                             |
+| 19 | Stand on rock terrain and press G                          | The player may collect stone or flint.                                                                                 |
+| 20 | Click Craft Axe without enough materials                   | A message displays the missing materials, such as "Missing stick: 2, stone: 1".                                        |
+| 21 | Check crafting buttons                                     | Recipe names and any displayed ingredient requirements match core/recipes.ts.                                          |
+| 22 | Collect the ingredients listed for the axe, then craft it  | The axe is added and exactly the recipe's ingredient amounts are deducted.                                             |
+| 23 | Try crafting an axe that is already owned                  | The button remains keyboard-accessible. Clicking it reports that the axe is already owned, without changing inventory. |
+| 24 | Walk into forest with an axe                               | The player enters the forest successfully.                                                                             |
+| 25 | Stand in the forest and press G                            | The player may collect wood or leaves.                                                                                 |
+| 26 | Carry leaves and move onto a cell next to water            | The leaves automatically become wet leaves.                                                                            |
+| 27 | Try walking into water                                     | The player is blocked and a message explains that water cannot be entered.                                             |
+| 28 | Collect the required materials and craft a campfire        | Materials are deducted and a campfire is added to inventory.                                                           |
+| 29 | Click Build Rescue Signal without enough materials         | The message displays which materials are missing.                                                                      |
+| 30 | Craft Build Rescue Signal with 1 campfire and 5 wet leaves | The game displays "Your signal was spotted. You are rescued!" and the player wins.                                     |
 
 ## After Winning
 

@@ -8,7 +8,6 @@ const RECIPE_NAMES: Record<string, string> = {
 
 export class Craft {
   private readonly state: GameState;
-  private readonly list: HTMLElement;
 
   private readonly buttons: {
     name: string;
@@ -22,7 +21,6 @@ export class Craft {
     send: (command: Command) => void,
   ) {
     this.state = state;
-    this.list = list;
 
     for (const name of Object.keys(RECIPES)) {
       const li = document.createElement("li");
@@ -74,28 +72,11 @@ export class Craft {
 
       if (owned) {
         button.textContent = `${displayName} ✓ Owned`;
-        button.disabled = true;
       } else {
         button.textContent = `${displayName}\n${requirements}`;
-
-        // Keep clickable so missing-materials messages show
-        button.disabled = this.state.won;
       }
 
       li.classList.toggle("recipe-owned", owned);
-    }
-
-    // Move owned recipes to the bottom
-    const sorted = [...this.buttons].sort((a, b) => {
-      const aOwned = (this.state.inventory[RECIPES[a.name].output] ?? 0) > 0;
-
-      const bOwned = (this.state.inventory[RECIPES[b.name].output] ?? 0) > 0;
-
-      return Number(aOwned) - Number(bOwned);
-    });
-
-    for (const entry of sorted) {
-      this.list.appendChild(entry.li);
     }
   }
 }

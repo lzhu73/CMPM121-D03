@@ -145,7 +145,7 @@ function gather(state: GameState): GameEvent[] {
     } else {
       state.flintPity += 1;
 
-      if (state.flintPity >= 50) {
+      if (state.flintPity >= 30) {
         items["flint"] = 1;
         state.flintPity = 0;
       }
