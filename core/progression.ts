@@ -10,6 +10,8 @@ import { type Recipe, RECIPES } from "./recipes.ts";
 export type Progression = {
   items: Set<string>;
   terrains: Set<Terrain>;
+  made: Set<string>;
+  unreachable: string[];
 };
 
 // Fixpoint:
@@ -21,6 +23,7 @@ export function reachableProgression(
 ): Progression {
   const items = new Set<string>();
   const terrains = new Set<Terrain>();
+  const made = new Set<string>();
 
   let changed = true;
 
@@ -71,15 +74,15 @@ export function reachableProgression(
     }
 
     // Step 4: Discover craftable recipes
-    for (const recipe of Object.values(recipes)) {
+    for (const [name, recipe] of Object.entries(recipes)) {
+      if (made.has(name)) continue;
+
       const canCraft = Object.keys(recipe.inputs).every(
         (item) => items.has(item),
       );
 
-      if (
-        canCraft &&
-        !items.has(recipe.output)
-      ) {
+      if (canCraft) {
+        made.add(name);
         items.add(recipe.output);
         changed = true;
       }
@@ -89,6 +92,10 @@ export function reachableProgression(
   return {
     items,
     terrains,
+    made,
+    unreachable: Object.keys(recipes).filter(
+      (name) => !made.has(name),
+    ),
   };
 }
 
@@ -96,9 +103,9 @@ export function reachableProgression(
 export function canReachEnding(): boolean {
   const progression = reachableProgression();
 
-  return Object.values(RECIPES).some(
-    (recipe) =>
+  return Object.entries(RECIPES).some(
+    ([name, recipe]) =>
       recipe.wins === true &&
-      progression.items.has(recipe.output),
+      progression.made.has(name),
   );
 }

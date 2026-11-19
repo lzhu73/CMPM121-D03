@@ -61,3 +61,33 @@ Deno.test("a recipe with an impossible input stays locked", () => {
     false,
   );
 });
+Deno.test("all real recipes are reachable", () => {
+  const result = reachableProgression();
+
+  assertEquals(result.unreachable, []);
+});
+
+Deno.test("a recipe requiring its own output is unreachable", () => {
+  const result = reachableProgression({
+    cursed_tool: {
+      inputs: { cursed_tool: 1 },
+      output: "cursed_tool",
+    },
+  });
+
+  assertEquals(result.made.has("cursed_tool"), false);
+  assertEquals(result.unreachable, ["cursed_tool"]);
+});
+
+Deno.test("a gatherable output does not make its recipe reachable", () => {
+  const result = reachableProgression({
+    special_stone: {
+      inputs: { mystery_crystal: 1 },
+      output: "stone",
+    },
+  });
+
+  assert(result.items.has("stone"));
+  assertEquals(result.made.has("special_stone"), false);
+  assertEquals(result.unreachable, ["special_stone"]);
+});
