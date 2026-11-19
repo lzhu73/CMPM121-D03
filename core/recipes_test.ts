@@ -75,3 +75,24 @@ Deno.test("crafting an owned item fails without spending materials", () => {
   assertEquals(state, snapshot);
   assertEquals(events[0].type, "craft_failed");
 });
+
+Deno.test("a crafted event keeps its inventory after another craft", () => {
+  const state = newGame(121);
+
+  // prepare enough resources
+  for (const name of ["axe", "campfire"]) {
+    for (const [item, count] of Object.entries(RECIPES[name].inputs)) {
+      state.inventory[item] = (state.inventory[item] ?? 0) + count;
+    }
+  }
+
+  const first = apply(state, { type: "craft", recipe: "axe" });
+  assertEquals(first[0].type, "crafted");
+
+  const snapshot = JSON.parse(JSON.stringify(first));
+
+  const second = apply(state, { type: "craft", recipe: "campfire" });
+  assertEquals(second[0].type, "crafted");
+
+  assertEquals(first, snapshot);
+});

@@ -176,6 +176,7 @@ function gather(state: GameState): GameEvent[] {
     at,
     items,
     inventory: { ...state.inventory },
+    // inventory: state.inventory,
   }];
 }
 
