@@ -255,9 +255,9 @@ function wetLeaves(state: GameState): GameEvent[] {
   if (!besideWater) return [];
 
   state.inventory[WETTING.input] = 0;
-  // state.inventory[WETTING.output] = (state.inventory[WETTING.output] ?? 0) +
-  //   count;
-  state.inventory[WETTING.output] = count;
+  state.inventory[WETTING.output] = (state.inventory[WETTING.output] ?? 0) +
+    count;
+  // state.inventory[WETTING.output] = count;
 
   return [{
     type: "leaves_wetted",

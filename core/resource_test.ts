@@ -1,5 +1,12 @@
 import { assertEquals } from "@std/assert";
-import { apply, gatherRoll, newGame, type Terrain, terrainAt } from "./mod.ts";
+import {
+  apply,
+  gatherRoll,
+  isPassable,
+  newGame,
+  type Terrain,
+  terrainAt,
+} from "./mod.ts";
 
 function gameAt(terrain: Terrain, min: number, max: number) {
   const state = newGame(121);
@@ -86,4 +93,42 @@ Deno.test("the 50th rock attempt guarantees flint even on an empty roll", () => 
     items: { flint: 1 },
     inventory: { flint: 1 },
   }]);
+});
+
+Deno.test("wetting leaves adds to existing wet leaves", () => {
+  const state = newGame(121);
+  let found = false;
+
+  for (let y = -100; y <= 100 && !found; y++) {
+    for (let x = -100; x <= 100; x++) {
+      if (!isPassable(terrainAt(state.seed, x - 1, y))) continue;
+      if (!isPassable(terrainAt(state.seed, x, y))) continue;
+      if (terrainAt(state.seed, x + 1, y) !== "water") continue;
+
+      state.player = { x: x - 1, y };
+      found = true;
+      break;
+    }
+  }
+
+  if (!found) {
+    throw new Error("No suitable water edge found");
+  }
+
+  state.inventory = { leaf: 3, wet_leaf: 2 };
+
+  const events = apply(state, {
+    type: "move",
+    direction: "east",
+  });
+
+  assertEquals(events[0].type, "moved");
+  assertEquals(state.inventory["leaf"], 0);
+  assertEquals(state.inventory["wet_leaf"], 5);
+
+  assertEquals(events[1], {
+    type: "leaves_wetted",
+    count: 3,
+    inventory: { leaf: 0, wet_leaf: 5 },
+  });
 });

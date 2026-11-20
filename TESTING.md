@@ -36,7 +36,7 @@ For a person, or an agent driving a browser. Run `deno task dev` and open the lo
 | 23 | Try crafting an axe that is already owned                  | The button remains keyboard-accessible. Clicking it reports that the axe is already owned, without changing inventory. |
 | 24 | Walk into forest with an axe                               | The player enters the forest successfully.                                                                             |
 | 25 | Stand in the forest and press G                            | The player may collect wood or leaves.                                                                                 |
-| 26 | Carry leaves and move onto a cell next to water            | The leaves automatically become wet leaves.                                                                            |
+| 26 | Carry leaves and move onto a cell next to water            | The leaves become wet leaves and added to wet leaves inventory, not replacing the inventory.                           |
 | 27 | Try walking into water                                     | The player is blocked and a message explains that water cannot be entered.                                             |
 | 28 | Collect the required materials and craft a campfire        | Materials are deducted and a campfire is added to inventory.                                                           |
 | 29 | Click Build Rescue Signal without enough materials         | The message displays which materials are missing.                                                                      |
