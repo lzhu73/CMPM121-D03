@@ -47,14 +47,14 @@ For a person, or an agent driving a browser. Run `deno task dev` and open the lo
 
 | #  | Action                      | Expected observation                                         |
 | -- | --------------------------- | ------------------------------------------------------------ |
-| 31 | Try moving after winning    | The player cannot move and the game state does not change.   |
-| 32 | Try gathering after winning | No resources are added and the game state does not change.   |
-| 33 | Try crafting after winning  | No new items are crafted and the game state does not change. |
+| 32 | Try moving after winning    | The player cannot move and the game state does not change.   |
+| 33 | Try gathering after winning | No resources are added and the game state does not change.   |
+| 34 | Try crafting after winning  | No new items are crafted and the game state does not change. |
 
 ## Final Checks
 
 | #  | Action                              | Expected observation                                                              |
 | -- | ----------------------------------- | --------------------------------------------------------------------------------- |
-| 34 | Reload the game with the same seed  | The terrain layout is identical.                                                  |
-| 35 | Run `deno task ci`                  | All formatting, linting, type-checking, boundary, testing, and build checks pass. |
-| 36 | Open the deployed GitHub Pages game | Movement, gathering, crafting, and the rescue ending work correctly.              |
+| 35 | Reload the game with the same seed  | The terrain layout is identical.                                                  |
+| 36 | Run `deno task ci`                  | All formatting, linting, type-checking, boundary, testing, and build checks pass. |
+| 37 | Open the deployed GitHub Pages game | Movement, gathering, crafting, and the rescue ending work correctly.              |
