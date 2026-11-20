@@ -47,7 +47,7 @@ Requirements:
 
 ```shell
 git clone https://github.com/lzhu73/CMPM121-D03.git
-cd CMPM121-D3
+cd CMPM121-D03
 ```
 
 2. Install dependencies and enable the commit hook:

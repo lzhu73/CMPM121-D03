@@ -78,7 +78,7 @@ Deno.test("a rock gather without flint increases the pity counter", () => {
   assertEquals(state.flintPity, 29);
 });
 
-Deno.test("the 50th rock attempt guarantees flint even on an empty roll", () => {
+Deno.test("the 30th rock attempt guarantees flint even on an empty roll", () => {
   const state = gameAt("rock", 0.75, 1);
   state.flintPity = 29;
   const { x, y } = state.player;
